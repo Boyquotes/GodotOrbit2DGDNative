@@ -24,10 +24,18 @@ namespace orbits {
             const float rotational_period
     );
 
-    godot::Vector2 get_focus_point(
+    godot::Vector2 get_focus_point_from_centroid(
             const float eccentricity,
             const float semi_major_axis,
-            const float argument_of_periapsis
+            const float argument_of_periapsis,
+            const godot::Vector2 centroid
+    );
+
+    godot::Vector2 get_centroid_from_focus_point(
+            const float eccentricity,
+            const float semi_major_axis,
+            const float argument_of_periapsis,
+            const godot::Vector2 focus
     );
 
     float get_orbital_period(

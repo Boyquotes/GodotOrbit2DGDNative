@@ -19,15 +19,29 @@ namespace orbits {
         return pow(standard_gravitational_parameter * pow(rotational_period, 2.0) / (4.0 * pow(M_PI, 2.0)), 1.0 / 3.0);
     }
 
-    godot::Vector2 get_focus_point(
+    godot::Vector2 get_focus_point_from_centroid(
             const float eccentricity,
             const float semi_major_axis,
-            const float argument_of_periapsis
+            const float argument_of_periapsis,
+            const godot::Vector2 centroid
     ) {
         float le = get_linear_eccentricity(eccentricity, semi_major_axis);
         return godot::Vector2{
-                le * godot::Math::sin(argument_of_periapsis),
-                le * godot::Math::cos(argument_of_periapsis)
+                le * godot::Math::sin(argument_of_periapsis) + centroid.x,
+                le * godot::Math::cos(argument_of_periapsis) + centroid.y
+        };
+    }
+
+    godot::Vector2 get_centroid_from_focus_point(
+            const float eccentricity,
+            const float semi_major_axis,
+            const float argument_of_periapsis,
+            const godot::Vector2 focus
+    ) {
+        float le = get_linear_eccentricity(eccentricity, semi_major_axis);
+        return godot::Vector2{
+            focus.x - le * godot::Math::sin(argument_of_periapsis),
+            focus.y - le * godot::Math::cos(argument_of_periapsis)
         };
     }
 

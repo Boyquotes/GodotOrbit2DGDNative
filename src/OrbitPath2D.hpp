@@ -24,7 +24,6 @@ private:
     godot::Color draw_color;
 
     // Memoizations
-    godot::Vector2 _focus;
     float _semi_minor_axis;
     // float _cached_angular_velocity;
     // float _standard_gravitational_parameter;

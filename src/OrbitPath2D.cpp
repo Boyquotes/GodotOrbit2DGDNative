@@ -21,16 +21,17 @@ void OrbitPath2D::draw_ellipse() {
 	const int nb_points = get_draw_resolution();
 	float theta = 0.0;  // angle that will be increased each loop
 	const float step = M_2_PI / nb_points;  // amount to add to theta each time (radians)
+    auto centroid = orbits::get_centroid_from_focus_point(eccentricity, semi_major_axis, argument_of_periapsis, get_focus_point());
 	godot::PoolVector2Array points;
 
 	int i = 0;
 	while (theta < M_2_PI) {
-		const real_t x = semi_major_axis*godot::Math::cos(theta) + _focus.x;
-		const real_t y = get_semi_minor_axis()*godot::Math::sin(theta) + _focus.y;
+		const real_t x = semi_major_axis*godot::Math::cos(theta) + centroid.x;
+		const real_t y = get_semi_minor_axis()*godot::Math::sin(theta) + centroid.y;
 		// Rotate by argument of periapsis
 		const real_t x_ = x*godot::Math::cos(argument_of_periapsis) - y*godot::Math::sin(argument_of_periapsis);
 		const real_t y_ = x*godot::Math::sin(argument_of_periapsis) + y*godot::Math::cos(argument_of_periapsis);
-		points.push_back(godot::Vector2{x_, y_}-_focus);
+		points.push_back(godot::Vector2{x_, y_}-centroid);
 		theta += step;
 		i++;
 	}
@@ -45,34 +46,31 @@ void OrbitPath2D::generate_path() {
     const float a = semi_major_axis;
     const float b = get_semi_minor_axis();
     auto curve = get_curve();
-    auto position = get_position();
+    auto centroid = orbits::get_centroid_from_focus_point(eccentricity, semi_major_axis, argument_of_periapsis, get_focus_point());
     curve->clear_points();
-	curve->add_point(position+godot::Vector2(b,0),godot::Vector2(0,-a));
-	curve->add_point(position+godot::Vector2(0,a),godot::Vector2(b,0));
-	curve->add_point(position+godot::Vector2(-b,0),godot::Vector2(0,a));
-	curve->add_point(position+godot::Vector2(0,-a),godot::Vector2(-b,0));
-	curve->add_point(position+godot::Vector2(b,0),godot::Vector2(0,-a));
+	curve->add_point(centroid+godot::Vector2(b,0),godot::Vector2(0,-a));
+	curve->add_point(centroid+godot::Vector2(0,a),godot::Vector2(b,0));
+	curve->add_point(centroid+godot::Vector2(-b,0),godot::Vector2(0,a));
+	curve->add_point(centroid+godot::Vector2(0,-a),godot::Vector2(-b,0));
+	curve->add_point(centroid+godot::Vector2(b,0),godot::Vector2(0,-a));
 }
 
 // Setters
 void OrbitPath2D::set_semi_major_axis(const float value) {
     semi_major_axis = value;
     _semi_minor_axis = orbits::get_semi_minor_axis(eccentricity, semi_major_axis);
-    _focus = orbits::get_focus_point(eccentricity, semi_major_axis, argument_of_periapsis);
     // _cached_angular_velocity = 0.0;
     generate_path();
     update();
 }
 void OrbitPath2D::set_eccentricity(const float value) {
     eccentricity = value;
-    _focus = orbits::get_focus_point(eccentricity, semi_major_axis, argument_of_periapsis);
     // _cached_angular_velocity = 0.0;
     generate_path();
     update();
 }
 void OrbitPath2D::set_argument_of_periapsis(const float value) {
     argument_of_periapsis = value;
-    _focus = orbits::get_focus_point(eccentricity, semi_major_axis, argument_of_periapsis);
     // _cached_angular_velocity = 0.0;
     generate_path();
     update();
@@ -127,7 +125,7 @@ float OrbitPath2D::get_semi_minor_axis() {
 //    return _standard_gravitational_area;
 //}
 godot::Vector2 OrbitPath2D::get_focus_point() {
-    return _focus;
+    return get_position();
 }
 godot::Color OrbitPath2D::get_draw_color() {
     return draw_color;
