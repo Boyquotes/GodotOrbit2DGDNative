@@ -9,8 +9,10 @@
 #include <PathFollow2D.hpp>
 #include <PhysicsBody2D.hpp>
 
-class OrbitPath2D : public godot::Path2D {
-    GODOT_CLASS(OrbitPath2D, godot::Sprite
+namespace godot {
+
+class OrbitPath2D : public Path2D {
+    GODOT_CLASS(OrbitPath2D, Sprite
     )
 
 private:
@@ -18,10 +20,8 @@ private:
     float semi_major_axis;
     float eccentricity;
     float argument_of_periapsis;
-    float gravity;
-    float gravity_distance_scale;
     float draw_resolution;
-    godot::Color draw_color;
+    Color draw_color;
 
     // Memoizations
     float _semi_minor_axis;
@@ -38,13 +38,7 @@ public:
 
     ~OrbitPath2D();
 
-    // Godot functions
-    void _init(); // our initializer called by Godot
-
-    void _ready();
-
-    //  void _physics_process(float delta);
-
+    void _init();
     void _draw();
 
     // Important Functions
@@ -61,7 +55,7 @@ public:
 
     void set_draw_resolution(const int value);
 
-    void set_draw_color(const godot::Color value);
+    void set_draw_color(const Color value);
 
     //  void set_gravity(const float value);
 
@@ -74,16 +68,16 @@ public:
 
     int get_draw_resolution();
 
-    godot::Color get_draw_color();
+    Color get_draw_color();
 
     // float get_gravity();
 
     // Memoized Getters
     float get_semi_minor_axis();
 
-    // godot::Vector2 get_velocity();
+    // Vector2 get_velocity();
 
-    godot::Vector2 get_focus_point();
+    Vector2 get_focus_point();
 
     // PhysicsBody2D *get_body();
 
@@ -93,5 +87,7 @@ public:
 
     // float get_standard_gravitational_parameter();
 };
+
+}
 
 #endif // __ORBITFOLLOW2D_H_
