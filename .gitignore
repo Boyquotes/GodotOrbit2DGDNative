@@ -1,3 +1,9 @@
+.idea
+cmake-build-debug
+
+# SCONS
+*.os
+
 # Prerequisites
 *.d
 
@@ -30,3 +36,4 @@
 *.exe
 *.out
 *.app
+/.sconsign.dblite
