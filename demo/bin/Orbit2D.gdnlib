@@ -13,6 +13,6 @@ OSX.64="res://bin/osx/liborbit2d.dylib"
 
 [dependencies]
 
-X11.64=[  ]
+LinuxBSD.64=[  ]
 Windows.64=[  ]
-OSX.64=[  ]
+macOS.64=[  ]
